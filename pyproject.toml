@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clausegraph"
+version = "0.1.0"
+description = "Versioned clause trees and three-route document graphs"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10,<3",
+    "markdown-it-py>=3,<5",
+    "rdflib>=7,<8",
+]
+
+[project.optional-dependencies]
+external = [
+    "jsonschema>=4,<5",
+    "httpx>=0.27,<1",
+    "ontorag @ git+https://github.com/nuri428/ontorag.git@0eabb7f0d547b946a5cd0ec710ce3dc52fe09e21",
+]
+neo4j = ["neo4j>=5.23,<7"]
+web = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "python-multipart>=0.0.18,<1", "neo4j>=5.23,<7"]
+
+[project.scripts]
+clausegraph = "clausegraph.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["clausegraph"]
+
+[tool.setuptools.package-data]
+clausegraph = ["web/*.html", "web/*.css", "web/*.js"]

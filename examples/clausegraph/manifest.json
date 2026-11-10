@@ -1,0 +1,6 @@
+{
+  "dataset_id": "cooling-example",
+  "documents": [{"id": "notes", "path": "notes.md"}],
+  "ontology": "ontology.ttl",
+  "model": {}
+}

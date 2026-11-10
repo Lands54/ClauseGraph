@@ -1,0 +1,11 @@
+@prefix r2: <https://codex.local/route2/vocab#> .
+@prefix ex: <https://example.org/cooling/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:equipment rdfs:label "设备" ;
+    r2:matchTitleCue "冷却" ;
+    ex:contains ex:valve .
+
+ex:valve rdfs:label "阀门" ;
+    r2:matchBodyCue "阀门" ;
+    r2:scoreFloor 0.2 .

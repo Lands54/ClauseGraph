@@ -1,0 +1,257 @@
+@prefix r2: <https://codex.local/route2/vocab#> .
+@prefix se: <https://example.org/software-engineering/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# ClauseGraph route 2 matching profile.
+# Domain coverage is organized with reference to SEON (Software Engineering
+# Ontology Network), especially its Software Process Ontology core and its
+# requirements, design, testing, configuration management, measurement,
+# project management, and quality assurance subdomains.
+# Reference: https://dev.nemo.inf.ufes.br/seon/SEON.html
+# This is an original, application-oriented profile, not a copy of SEON OWL.
+# The r2:match* values are practical lexical cues for ClauseGraph's rule matcher.
+
+se:profile a r2:OntologyProfile ;
+    r2:version "1.0.0" ;
+    r2:confirmedScoreFloor 0.72 ;
+    r2:confirmedEvidenceGroupFloor 2 ;
+    dcterms:title "Software Engineering Domain Profile"@en ;
+    dcterms:source <https://dev.nemo.inf.ufes.br/seon/SEON.html> .
+
+se:softwareProcess a r2:Concept ;
+    rdfs:label "软件过程"@zh ;
+    rdfs:label "Software process"@en ;
+    r2:alias "软件生命周期", "software lifecycle", "software process" ;
+    r2:matchBodyCue "软件过程", "开发过程", "生命周期", "software process", "development process" ;
+    r2:matchHeaderCue "过程", "生命周期", "process", "lifecycle" ;
+    r2:scoreFloor 0.2 ;
+    se:contains se:softwareProject, se:softwareActivity, se:softwareArtifact, se:softwareResource, se:softwareProcedure .
+
+se:softwareProject a r2:Concept ;
+    rdfs:label "软件项目"@zh ; rdfs:label "Software project"@en ;
+    r2:alias "项目计划", "项目管理", "software project", "project management" ;
+    r2:matchBodyCue "项目范围", "项目计划", "项目管理", "项目经理", "project scope", "project plan", "project management", "project manager" ;
+    r2:matchHeaderCue "项目", "project" ;
+    r2:matchIdentifierPattern "(?i)(?:WBS|项目|project)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ;
+    se:partOf se:softwareProcess ; se:relatedTo se:stakeholder, se:softwareRisk, se:softwareMetric .
+
+se:stakeholder a r2:Concept ;
+    rdfs:label "相关方"@zh ; rdfs:label "Stakeholder"@en ;
+    r2:alias "干系人", "用户", "客户", "stakeholder", "user", "customer" ;
+    r2:matchBodyCue "相关方", "干系人", "用户", "客户", "stakeholder", "user", "customer" ;
+    r2:scoreFloor 0.2 ;
+    se:relatedTo se:softwareRequirement, se:softwareProject .
+
+se:softwareActivity a r2:Concept ;
+    rdfs:label "软件工程活动"@zh ; rdfs:label "Software engineering activity"@en ;
+    r2:alias "工程活动", "software engineering activity" ;
+    r2:matchBodyCue "工程活动", "开发活动", "software engineering activity", "engineering activity" ;
+    r2:matchHeaderCue "活动", "activity" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:requirementsEngineering, se:softwareDesign, se:softwareConstruction, se:softwareTesting, se:softwareMaintenance .
+
+se:softwareArtifact a r2:Concept ;
+    rdfs:label "软件制品"@zh ; rdfs:label "Software artifact"@en ;
+    r2:alias "工作产品", "交付物", "软件工件", "software work product", "deliverable" ;
+    r2:matchBodyCue "软件制品", "工作产品", "交付物", "需求文档", "设计文档", "源代码", "测试报告", "software artifact", "work product", "deliverable", "source code", "test report" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareRequirement, se:softwareArchitecture, se:softwareComponent, se:testCase, se:softwareConfigurationItem .
+
+se:softwareResource a r2:Concept ;
+    rdfs:label "软件过程资源"@zh ; rdfs:label "Software process resource"@en ;
+    r2:alias "开发资源", "工程资源", "software resource" ;
+    r2:matchBodyCue "开发资源", "工程资源", "人力资源", "开发环境", "工具链", "software resource", "development environment", "toolchain" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareTool, se:softwareProject .
+
+se:softwareProcedure a r2:Concept ;
+    rdfs:label "软件工程规程"@zh ; rdfs:label "Software engineering procedure"@en ;
+    r2:alias "方法", "规范", "规程", "procedure", "method", "standard" ;
+    r2:matchBodyCue "工程规程", "开发规范", "操作步骤", "工作流程", "procedure", "standard", "workflow", "method" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess .
+
+se:requirementsEngineering a r2:Concept ;
+    rdfs:label "需求工程"@zh ; rdfs:label "Requirements engineering"@en ;
+    r2:alias "需求分析", "需求获取", "需求管理", "requirements engineering", "requirements analysis", "requirements management" ;
+    r2:matchBodyCue "需求工程", "需求分析", "需求获取", "需求管理", "需求基线", "需求变更", "requirements engineering", "requirements analysis", "requirements elicitation", "requirements management", "requirements baseline", "requirement change" ;
+    r2:matchHeaderCue "需求", "requirements" ;
+    r2:matchIdentifierPattern "(?i)(?:REQ|FR|NFR|需求)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareRequirement, se:stakeholder, se:requirementsTraceability .
+
+se:softwareRequirement a r2:Concept ;
+    rdfs:label "软件需求"@zh ; rdfs:label "Software requirement"@en ;
+    r2:alias "功能需求", "非功能需求", "需求", "software requirement", "functional requirement", "non-functional requirement" ;
+    r2:matchBodyCue "功能需求", "非功能需求", "软件需求", "系统需求", "用户需求", "functional requirement", "non-functional requirement", "software requirement", "system requirement", "user requirement" ;
+    r2:matchHeaderCue "功能需求", "非功能需求", "需求描述", "requirements" ;
+    r2:matchIdentifierPattern "(?i)(?:REQ|FR|NFR|需求)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:requirementsEngineering ;
+    se:relatedTo se:stakeholder, se:requirementsTraceability, se:softwareArchitecture, se:softwareTest .
+
+se:requirementsTraceability a r2:Concept ;
+    rdfs:label "需求可追踪性"@zh ; rdfs:label "Requirements traceability"@en ;
+    r2:alias "需求追踪", "双向追踪", "traceability matrix", "requirements traceability" ;
+    r2:matchBodyCue "需求可追踪", "需求追踪", "双向追踪", "追踪矩阵", "需求跟踪", "requirements traceability", "traceability matrix", "bidirectional traceability" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareRequirement, se:softwareArchitecture, se:softwareTest, se:softwareChange .
+
+se:softwareDesign a r2:Concept ;
+    rdfs:label "软件设计"@zh ; rdfs:label "Software design"@en ;
+    r2:alias "详细设计", "概要设计", "software design", "detailed design", "high-level design" ;
+    r2:matchBodyCue "软件设计", "概要设计", "详细设计", "接口设计", "数据设计", "software design", "detailed design", "interface design", "data design" ;
+    r2:matchHeaderCue "设计", "design" ;
+    r2:matchIdentifierPattern "(?i)(?:DES|设计)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareArchitecture, se:softwareComponent, se:softwareRequirement .
+
+se:softwareArchitecture a r2:Concept ;
+    rdfs:label "软件架构"@zh ; rdfs:label "Software architecture"@en ;
+    r2:alias "系统架构", "架构设计", "software architecture", "system architecture" ;
+    r2:matchBodyCue "软件架构", "系统架构", "架构设计", "架构决策", "架构视图", "software architecture", "system architecture", "architectural design", "architecture decision", "architecture view" ;
+    r2:matchHeaderCue "架构", "architecture" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareDesign ;
+    se:relatedTo se:softwareComponent, se:softwareInterface, se:softwareQuality, se:softwareRequirement .
+
+se:softwareComponent a r2:Concept ;
+    rdfs:label "软件组件"@zh ; rdfs:label "Software component"@en ;
+    r2:alias "模块", "子系统", "software module", "subsystem" ;
+    r2:matchBodyCue "软件组件", "软件模块", "子系统", "微服务", "software component", "software module", "subsystem", "microservice" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareDesign ;
+    se:relatedTo se:softwareInterface, se:softwareConfigurationItem .
+
+se:softwareInterface a r2:Concept ;
+    rdfs:label "软件接口"@zh ; rdfs:label "Software interface"@en ;
+    r2:alias "API", "应用程序接口", "接口契约", "software interface", "interface contract" ;
+    r2:matchBodyCue "软件接口", "接口契约", "应用程序接口", "接口定义", "API", "software interface", "interface contract", "API specification" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareComponent, se:softwareRequirement, se:softwareTest .
+
+se:softwareConstruction a r2:Concept ;
+    rdfs:label "软件构造"@zh ; rdfs:label "Software construction"@en ;
+    r2:alias "编码", "实现", "程序设计", "software coding", "implementation" ;
+    r2:matchBodyCue "软件构造", "编码规范", "代码实现", "程序实现", "代码审查", "software construction", "coding standard", "code implementation", "code review" ;
+    r2:matchHeaderCue "编码", "实现", "构造", "coding", "implementation" ;
+    r2:matchIdentifierPattern "(?i)(?:CODE|IMPL|实现|编码)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:sourceCode, se:softwareComponent, se:softwareTool, se:softwareChange .
+
+se:sourceCode a r2:Concept ;
+    rdfs:label "源代码"@zh ; rdfs:label "Source code"@en ;
+    r2:alias "代码", "程序代码", "source code", "program code" ;
+    r2:matchBodyCue "源代码", "程序代码", "代码库", "代码仓库", "代码审查", "source code", "codebase", "code repository", "code review" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareComponent, se:softwareConfigurationItem, se:softwareChange .
+
+se:softwareTesting a r2:Concept ;
+    rdfs:label "软件测试"@zh ; rdfs:label "Software testing"@en ;
+    r2:alias "测试", "验证与确认", "V&V", "software test", "verification and validation" ;
+    r2:matchBodyCue "软件测试", "测试计划", "测试策略", "测试执行", "验证与确认", "验收测试", "回归测试", "software testing", "test plan", "test strategy", "test execution", "verification and validation", "acceptance testing", "regression testing" ;
+    r2:matchHeaderCue "测试", "验证", "确认", "testing", "verification", "validation" ;
+    r2:matchIdentifierPattern "(?i)(?:TEST|TC|测试用例|测试)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareTest, se:testCase, se:testProcedure, se:testResult, se:softwareDefect .
+
+se:softwareTest a r2:Concept ;
+    rdfs:label "软件测试项"@zh ; rdfs:label "Software test"@en ;
+    r2:alias "测试项", "测试场景", "测试活动", "software test" ;
+    r2:matchBodyCue "测试项", "测试场景", "测试活动", "测试条件", "测试目标", "software test", "test scenario", "test condition", "test objective" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareTesting ;
+    se:relatedTo se:softwareRequirement, se:testCase, se:testResult, se:softwareDefect .
+
+se:testCase a r2:Concept ;
+    rdfs:label "测试用例"@zh ; rdfs:label "Test case"@en ;
+    r2:alias "用例", "test case", "test scenario" ;
+    r2:matchBodyCue "测试用例", "用例编号", "前置条件", "预期结果", "实际结果", "test case", "precondition", "expected result", "actual result" ;
+    r2:matchHeaderCue "测试用例", "用例", "test case" ;
+    r2:matchIdentifierPattern "(?i)(?:TC|TEST|用例)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareTesting ;
+    se:relatedTo se:softwareRequirement, se:testProcedure, se:testResult .
+
+se:testProcedure a r2:Concept ;
+    rdfs:label "测试规程"@zh ; rdfs:label "Test procedure"@en ;
+    r2:alias "测试步骤", "test procedure", "test steps" ;
+    r2:matchBodyCue "测试规程", "测试步骤", "测试方法", "test procedure", "test steps", "test method" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareTesting ; se:relatedTo se:testCase, se:testResult .
+
+se:testResult a r2:Concept ;
+    rdfs:label "测试结果"@zh ; rdfs:label "Test result"@en ;
+    r2:alias "测试报告", "test result", "test report" ;
+    r2:matchBodyCue "测试结果", "测试报告", "测试通过", "测试失败", "缺陷报告", "test result", "test report", "pass rate", "test failure" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareTesting ; se:relatedTo se:softwareDefect .
+
+se:softwareDefect a r2:Concept ;
+    rdfs:label "软件缺陷"@zh ; rdfs:label "Software defect"@en ;
+    r2:alias "缺陷", "软件错误", "bug", "software bug", "software fault" ;
+    r2:matchBodyCue "软件缺陷", "缺陷跟踪", "缺陷修复", "故障", "bug", "software defect", "defect tracking", "defect fix", "software fault" ;
+    r2:matchIdentifierPattern "(?i)(?:BUG|DEFECT|缺陷)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareChange, se:softwareQuality, se:testResult .
+
+se:softwareMaintenance a r2:Concept ;
+    rdfs:label "软件维护"@zh ; rdfs:label "Software maintenance"@en ;
+    r2:alias "运维", "维护性", "software evolution", "software maintenance" ;
+    r2:matchBodyCue "软件维护", "系统维护", "版本升级", "补丁", "软件演化", "software maintenance", "system maintenance", "version upgrade", "patch", "software evolution" ;
+    r2:matchHeaderCue "维护", "运维", "maintenance", "evolution" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ; se:relatedTo se:softwareChange, se:softwareConfigurationManagement .
+
+se:softwareConfigurationManagement a r2:Concept ;
+    rdfs:label "软件配置管理"@zh ; rdfs:label "Software configuration management"@en ;
+    r2:alias "配置管理", "版本控制", "SCM", "software configuration management", "version control" ;
+    r2:matchBodyCue "软件配置管理", "配置管理", "版本控制", "基线管理", "变更控制", "配置项", "software configuration management", "version control", "baseline management", "change control", "configuration item" ;
+    r2:matchHeaderCue "配置管理", "版本管理", "configuration management", "version control" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ;
+    se:relatedTo se:softwareConfigurationItem, se:softwareChange, se:sourceCode, se:softwareRelease .
+
+se:softwareConfigurationItem a r2:Concept ;
+    rdfs:label "软件配置项"@zh ; rdfs:label "Software configuration item"@en ;
+    r2:alias "配置项", "受控项", "software configuration item", "controlled item" ;
+    r2:matchBodyCue "软件配置项", "配置项", "受控项", "配置基线", "software configuration item", "controlled item", "configuration baseline" ;
+    r2:matchIdentifierPattern "(?i)(?:CI|SCI|配置项)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareConfigurationManagement ; se:relatedTo se:softwareArtifact, se:softwareChange .
+
+se:softwareChange a r2:Concept ;
+    rdfs:label "软件变更"@zh ; rdfs:label "Software change"@en ;
+    r2:alias "变更请求", "变更控制", "change request", "change control" ;
+    r2:matchBodyCue "软件变更", "变更请求", "变更评审", "变更控制", "影响分析", "software change", "change request", "change review", "change control", "impact analysis" ;
+    r2:matchIdentifierPattern "(?i)(?:CR|RFC|变更)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareRequirement, se:softwareConfigurationItem, se:softwareRelease, se:softwareDefect .
+
+se:softwareRelease a r2:Concept ;
+    rdfs:label "软件发布"@zh ; rdfs:label "Software release"@en ;
+    r2:alias "版本发布", "部署", "软件交付", "software deployment", "software delivery" ;
+    r2:matchBodyCue "软件发布", "版本发布", "发布说明", "部署", "上线", "软件交付", "software release", "release notes", "deployment", "software delivery" ;
+    r2:matchIdentifierPattern "(?i)(?:REL|版本|发布)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareConfigurationManagement, se:softwareChange, se:softwareArtifact .
+
+se:softwareQuality a r2:Concept ;
+    rdfs:label "软件质量"@zh ; rdfs:label "Software quality"@en ;
+    r2:alias "质量保证", "质量属性", "QA", "software quality", "quality assurance", "quality attribute" ;
+    r2:matchBodyCue "软件质量", "质量保证", "质量属性", "质量目标", "质量计划", "质量控制", "software quality", "quality assurance", "quality attribute", "quality objective", "quality control" ;
+    r2:matchHeaderCue "质量", "quality" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareRisk, se:softwareMetric, se:softwareArchitecture, se:softwareDefect .
+
+se:softwareRisk a r2:Concept ;
+    rdfs:label "软件风险"@zh ; rdfs:label "Software risk"@en ;
+    r2:alias "风险分析", "风险管理", "risk analysis", "risk management" ;
+    r2:matchBodyCue "软件风险", "风险分析", "风险评估", "风险缓解", "风险应对", "risk analysis", "risk assessment", "risk mitigation", "risk response" ;
+    r2:matchIdentifierPattern "(?i)(?:RISK|风险)[-_ ]?\\d+(?:\\.\\d+)*" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareProject, se:softwareQuality .
+
+se:softwareMeasurement a r2:Concept ;
+    rdfs:label "软件度量"@zh ; rdfs:label "Software measurement"@en ;
+    r2:alias "软件测量", "度量指标", "软件度量" ;
+    r2:matchBodyCue "软件度量", "软件测量", "度量指标", "度量方法", "度量数据", "software measurement", "software metric", "measurement method", "measurement data" ;
+    r2:matchHeaderCue "度量", "测量", "measurement", "metric" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareProcess ; se:relatedTo se:softwareMetric, se:softwareProject, se:softwareQuality .
+
+se:softwareMetric a r2:Concept ;
+    rdfs:label "软件度量指标"@zh ; rdfs:label "Software metric"@en ;
+    r2:alias "度量", "指标", "software measure", "metric" ;
+    r2:matchBodyCue "软件度量指标", "度量指标", "质量指标", "性能指标", "缺陷密度", "代码覆盖率", "software metric", "quality metric", "performance metric", "defect density", "code coverage" ;
+    r2:scoreFloor 0.2 ; se:partOf se:softwareMeasurement .
+
+se:softwareTool a r2:Concept ;
+    rdfs:label "软件工程工具"@zh ; rdfs:label "Software engineering tool"@en ;
+    r2:alias "开发工具", "测试工具", "工程环境", "software development tool" ;
+    r2:matchBodyCue "软件工程工具", "开发工具", "测试工具", "集成开发环境", "持续集成", "持续交付", "software engineering tool", "development tool", "testing tool", "IDE", "continuous integration", "continuous delivery" ;
+    r2:scoreFloor 0.2 ; se:relatedTo se:softwareResource, se:softwareConstruction, se:softwareTesting .
+
+se:softwareProcess rdfs:comment "Core concepts cover software processes, projects, activities, artifacts, resources and procedures; domain concepts cover requirements, design, construction, testing, maintenance, configuration management, quality, risk and measurement."@en .

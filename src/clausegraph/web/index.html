@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>条款图 · 项目工作台</title>
+  <link rel="stylesheet" href="/static/workbench.css">
+  <script src="/static/workbench.js?v=route-queries" defer></script>
+</head>
+<body>
+  <header>
+    <div class="shell top"><strong><span class="mark">◇</span> 条款图</strong><span>项目工作台</span>
+      <a href="http://127.0.0.1:7475/browser/" target="_blank" rel="noopener">Neo4j Browser ↗</a>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="intro">
+      <p class="eyebrow">项目 / 文件 / 快照</p>
+      <h1>项目图谱工作台</h1>
+      <p>把文件导入项目，再选择需要一起比较的文件版本，生成 Neo4j 图谱快照。</p>
+    </div>
+    <div class="toolbar card">
+      <label for="project">当前项目</label>
+      <select id="project"><option value="">正在加载项目…</option></select>
+      <button type="button" id="open-create" class="secondary">＋ 新建项目</button>
+    </div>
+    <p id="notice" role="status" aria-live="polite" hidden></p>
+    <div class="workspace">
+      <section class="card files">
+        <div class="section-title"><div><p class="eyebrow">01 / 选择版本</p><h2>项目文件</h2></div>
+          <label class="check"><input type="checkbox" id="history"> 显示历史版本</label></div>
+        <div class="table-wrap">
+          <table><thead><tr><th><input type="checkbox" id="select-all" aria-label="选择全部活动版本"></th>
+            <th>文档 / 版本</th><th>类型</th><th>三路</th><th>状态</th></tr></thead>
+            <tbody id="files"></tbody></table>
+        </div>
+        <div class="snapshot-filter">
+          <label for="snapshot-top-k">快照 BM25 Top K</label>
+          <input id="snapshot-top-k" type="number" min="1" step="1" placeholder="全部" aria-describedby="snapshot-top-k-help">
+          <span id="snapshot-top-k-help" class="subtle">每个条款写入快照的 BM25 出向边上限，留空保留全部。</span>
+        </div>
+        <div class="section-footer"><span id="selection">已选 0 个版本</span>
+          <button id="snapshot" type="button" disabled>生成快照 →</button></div>
+      </section>
+      <section class="card upload">
+        <p class="eyebrow">02 / 文件入库</p><h2>导入文件</h2>
+        <form id="import-form">
+          <fieldset id="import-fields" disabled>
+            <label>文件<input name="document" type="file" accept=".docx,.md,.markdown,.json" required></label>
+            <label>文档 ID<input name="document_id" placeholder="例如 requirements" required></label>
+            <label>文档类型 <span>可选</span><input name="document_type" placeholder="例如 srs 或 str"></label>
+            <label>三路抽取<select name="route3"><option value="">使用项目默认设置</option>
+              <option value="true">开启</option><option value="false">关闭</option></select></label>
+            <label class="check"><input name="replace" type="checkbox" value="true"> 替换同 ID 的活动版本</label>
+            <button type="submit">导入文件</button>
+          </fieldset>
+        </form>
+      </section>
+    </div>
+    <section class="card snapshots">
+      <p class="eyebrow">03 / 查看图谱</p><h2>项目快照</h2>
+      <div class="snapshot-filter">
+        <label for="bm25-top-k">BM25 Top K</label>
+        <input id="bm25-top-k" type="number" min="0" step="1" value="1" aria-describedby="bm25-top-k-help">
+        <span id="bm25-top-k-help" class="subtle">1 路查询中，每个条款最多保留 K 条出向 BM25 关系。留空显示全部，填 0 隐藏 BM25。</span>
+      </div>
+      <div id="snapshots" class="snapshot-list"></div>
+    </section>
+  </main>
+  <dialog id="create-dialog">
+    <div class="section-title"><h2>新建项目</h2><button id="close-create" type="button" class="secondary" aria-label="关闭">×</button></div>
+    <form id="create-form">
+      <label>项目 ID<input name="project" placeholder="例如 cooling-review" required></label>
+      <label>二路本体<input name="ontology" type="file" accept=".ttl" required></label>
+      <label class="check"><input name="route3" type="checkbox" value="true"> 默认开启三路抽取</label>
+      <p id="create-error" class="error" role="alert" hidden></p>
+      <button type="submit">创建项目</button>
+    </form>
+  </dialog>
+</body>
+</html>
